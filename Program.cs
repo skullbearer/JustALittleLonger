@@ -499,25 +499,17 @@ namespace IngameScript
             /// <returns></returns>
             public string GetDisplayText()
             {
-                float timeLeft = HoldOnTime - TimeElapsed;
-                int days = (int)(timeLeft % (60f * 24f));
-                timeLeft -= days * 60f * 24f;
-                int hours = (int)(timeLeft % 60f);
-                timeLeft -= hours * 60f;
-                int mins = (int)(timeLeft % 1);
-                timeLeft -= mins;
-                timeLeft *= 60f;
-                int secs = (int)(timeLeft % 1);
-                timeLeft -= secs;
-                timeLeft *= 1000f;
-                int ms = (int)(timeLeft % 1);
+                int timeLeft = (int)(HoldOnTime*60*60) - ticksElapsed;
+                int days = timeLeft / (60 * 60 * 60 * 24);
+                int hours = timeLeft / (60 * 60 * 60);
+                int mins = timeLeft / (60 * 60);
+                int secs = timeLeft / 60;
                 StringBuilder blah = new StringBuilder();
                 blah.AppendLine($"{Connector.CustomName}");
                 blah.AppendLine($"Disconnect in: )");
                 if (days > 0) blah.Append($"{days}d:");
                 if (hours > 0) blah.Append($"{hours}h:");
-                if (mins > 0) blah.AppendLine($"{mins}m:{secs}s");
-                else blah.AppendLine($"{secs}s:{ms}ms");
+                blah.AppendLine($"{mins}m:{secs}s");
                 return blah.ToString();
             }
         }

@@ -1,4 +1,4 @@
-﻿JALL v0.4 brought to you by Skullbearer
+﻿JALL v0.41 brought to you by Skullbearer
 
 Config (In the CustomData of the connector which you will be docking with)
 Config will be updated from CustomData every time you recompile, run the "start" command, and every 10 seconds.
