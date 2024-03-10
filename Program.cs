@@ -50,6 +50,7 @@ namespace IngameScript
 
         List<ManagedConnector> ManagedConnectors = new List<ManagedConnector>();
         Dictionary<string, string> iniNames = new Dictionary<string, string>();
+        Dictionary<IMyTextSurfaceProvider, List<ManagedConnector>> displayDictionary = new Dictionary<IMyTextSurfaceProvider, List<ManagedConnector>>();
 
         List<IMyTextSurfaceProvider> Displays = new List<IMyTextSurfaceProvider>();
 
@@ -123,25 +124,19 @@ namespace IngameScript
                     manCon = ManagedConnectors[i];
                     if (manCon.IsDead())
                         ManagedConnectors.RemoveAtFast(i);
-                    else
-                    {
-                        if (manCon.CheckConnection(10))
-                        {
-                            displayText.AppendLine(manCon.GetDisplayText());
-                        }
-                    }
+                    else manCon.CheckConnection(10);
                 }
                 if (tickCount < 0) //overflow situation
                     tickCount -= int.MinValue;
-                if (Displays.Count > 0 && displayText.Length > 0)
-                {
-                    UpdateDisplay(displayText.ToString());
-                }
             }
             else if (tickCount % 601 == 0)
             {
                 UpdateBlocks(false);
                 Save();
+            }
+            if (tickCount % 60 == 0)
+            {
+                UpdateDisplays();
             }
         }
 
@@ -185,18 +180,40 @@ namespace IngameScript
             }
             GridTerminalSystem.GetBlockGroupWithName(Dname).GetBlocksOfType(Displays);
         }
-        public void UpdateDisplay(string _showThis)
+        public void UpdateDisplay(IMyTextSurfaceProvider _sp, string _showThis)
         {
-            for (int i = Displays.Count - 1; i > -1; i--)
+
+            IMyTextSurface surf = _sp.GetSurface(0);
+            if (surf.ContentType != ContentType.TEXT_AND_IMAGE)
+                surf.ContentType = ContentType.TEXT_AND_IMAGE;
+            surf.WriteText(_showThis);
+        }
+
+        public void UpdateDisplays()
+        {
+            StringBuilder dtxt = new StringBuilder();
+            displayDictionary.Clear();
+            foreach (var d in displayDictionary.Keys)
             {
-                IMyTextSurfaceProvider d = Displays[i];
-                if (d == null) Displays.RemoveAtFast(i);
-                else
+                foreach (var manCon in ManagedConnectors)
                 {
-                    IMyTextSurface surf = d.GetSurface(0);
-                    if (surf.ContentType != ContentType.TEXT_AND_IMAGE)
-                        surf.ContentType = ContentType.TEXT_AND_IMAGE;
-                    surf.WriteText(_showThis);
+                    if (manCon.Displays.Contains(d)) displayDictionary[d].Add(manCon);
+                    if (Displays.Count > 0)
+                    {
+                        foreach (var d2 in Displays)
+                        {
+                            if (!displayDictionary[d2].Contains(manCon)) displayDictionary[d2].Add(manCon);
+                        }
+                    }
+                }
+                if (displayDictionary[d].Count > 0)
+                {
+                    dtxt.AppendLine(JALLversion);
+                    foreach (var manCon in displayDictionary[d])
+                    {
+                        dtxt.AppendLine(manCon.GetDisplayText());
+                    }
+                    UpdateDisplay(d, dtxt.ToString());
                 }
             }
         }
@@ -502,23 +519,6 @@ namespace IngameScript
                 if (mins > 0) blah.AppendLine($"{mins}m:{secs}s");
                 else blah.AppendLine($"{secs}s:{ms}ms");
                 return blah.ToString();
-            }
-
-            public void UpdateDisplay()
-            {
-                string showThis = GetDisplayText();
-                for(int i = Displays.Count - 1; i > -1; i--)
-                {
-                    IMyTextSurfaceProvider d = Displays[i];
-                    if (d == null) Displays.RemoveAtFast(i);
-                    else
-                    {
-                        IMyTextSurface surf = d.GetSurface(0);
-                        if(surf.ContentType != ContentType.TEXT_AND_IMAGE)
-                            surf.ContentType = ContentType.TEXT_AND_IMAGE;
-                        surf.WriteText(showThis);
-                    }
-                }
             }
         }
     }
