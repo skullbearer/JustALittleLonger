@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34525.116
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JustALittleLonger", "JustALittleLonger.csproj", "{EF42242D-7FA8-4EC5-8B74-80B60ADEDCDD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EF42242D-7FA8-4EC5-8B74-80B60ADEDCDD}.Debug|x64.ActiveCfg = Debug|x64
+		{EF42242D-7FA8-4EC5-8B74-80B60ADEDCDD}.Debug|x64.Build.0 = Debug|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8BDB18DF-8B2B-43ED-8990-8972CF25FB48}
+	EndGlobalSection
+EndGlobal

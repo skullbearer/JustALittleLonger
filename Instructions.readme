@@ -1,0 +1,55 @@
+﻿JALL v0.3 brought to you by Skullbearer
+
+Config (In the CustomData of the connector which you will be docking with)
+Config will be updated from CustomData every time you recompile, run the "start" command, and every 10 seconds.
+The Config will preferentially load from the PB's file Storage on recompile or if you muck with the config in CustomData and make it unreadable.
+If the CustomData is unreadable, the latest script read configuration data will be forcibly rewritten to it.
+If the CustomData of a Connector is unreadable, the script will throw an error telling you off about it.
+This script will play nice with any script or mod using MyIni format in CustomData, where there isn't identical section name in use.
+
+# TimerOnConnect: The name of the group which contains timers you want triggered each time a connector becomes connected (ie, when the script notices you've connected to something)
+
+# TimerAtDisconnect: As above, but only when the script disconnects the timer (or permits it to remain disconnected). Does not trigger on "stop".
+
+# UseThisDisplay: The name of the group which contains one or more displays which will show the time remaining on that connector.
+
+# HoldOnTimeInMinutes: The amount of time in minutes the script will attempt to maintain a connection.
+
+
+COMMANDS commandname : what it does
+start : Turns the script on. Refreshes everything in the script.
+stop : Turns the script off and clears as much data as possible to avoid file size bloat for the script.
+
+Commands are not case sensitive. StaRT and start and START will all work.
+Feel free to ask for additional commands and functions, but no promises from me unless you pay me.
+
+
+NOTES ABOUT THE SCRIPT
+
+Startup:
+The script checks 6 times per second if the connector has connected to something, but ONLY after the "start" command. That is, recompiling will let you confirm the script CAN work,
+but recompiling does not actually trigger the script TO work.
+
+Running:
+If the script has received a "start" command, and it sees a connector is connected, it will start counting the time since noticing that every 10 game ticks, which is 6 times per game second.
+If the connector has not reached the target HoldOnTimeInMinutes and it is disconnected, IT WILL ATTEMPT TO RECONNECT.
+> It will not attempt to reconnect for 10 seconds to avoid spamming during the 10 second trade station reconnect delay. (v0.3)
+The script WILL NOT turn the connector ON. If you turn the connector OFF, it will reset the timer for that connector and continue on it's merry way otherwise.
+If you disconnect with the script running before the HoldOnTimeInMinutes is reached, it'll reconnect after 10 seconds.
+Let's repeat that one. IF YOU DISCONNECT WITH THE SCRIPT RUNNING BEFORE THE HoldOnTimeInMinutes IS REACHED, IT WILL RECONNECT AFTER 10 SECONDS.
+Let's repeat that one.... 
+You should get the idea, but you'll probably think there is a bug anyways when you can't disconnect from the trade station.
+
+NOTE ABOUT TIMERS
+You don't need to specify any timers. The script will trigger the timers you put into the named groups on connect or on disconnect BY THE SCRIPT.
+
+NOTE ABOUT DISCONNECTING BY THE SCRIPT
+The purpose of this script is to "legally cheese" trade station time limits. For example, Sigma Draconis Expanse (SDX) at this time, has a 10 minute trade connector time,
+but it has a 30 minute maximum time at connector rule. The script is by default set to 30 minutes. So the script is set to stop you from violating the rules because
+Skullbearer is a bit obsessive about rule adherence. Skullbearer does not want you to break the rules. Skullbearer wants to help you play within the rules but beyond
+the annoying need to constantly manage your connected ship during long trades.
+So the script will disconnect you itself, if the time limit is reached. It will then trigger any TimerAtDisconnect timers. If you don't like what happens then, that's on you.
+You have been forewarned.
+
+
+This script is under an MIT license, written in VisualStudio 2022 (Community) using MDK-SE 1, by Malware. Please credit appropriately if you use or expand.
